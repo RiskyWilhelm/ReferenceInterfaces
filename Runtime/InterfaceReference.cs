@@ -25,8 +25,12 @@ namespace AYellowpaper
 			{
 				if (_underlyingValue == null)
 					return null;
+
+				// Not throwing exception in order to not block the user interactions
 				var @interface = _underlyingValue as TInterface;
-				Debug.Assert(@interface != null, $"{_underlyingValue} needs to implement interface {nameof(TInterface)}.");
+				if (@interface == null)
+					Debug.LogError($"{_underlyingValue} needs to implement interface {nameof(TInterface)}. Value returned null.");
+				
 				return @interface;
 			}
 			set
@@ -36,7 +40,9 @@ namespace AYellowpaper
 				else
 				{
 					var newValue = value as UObject;
-					UnityEngine.Debug.Assert(newValue != null, $"{value} needs to be of type {typeof(UObject)}.");
+					if (newValue == null)
+						Debug.LogError($"{value} needs to be of type {typeof(UObject)}. Value set to null.");
+					
 					_underlyingValue = newValue;
 				}
 			}
